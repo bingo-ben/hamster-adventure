@@ -6,7 +6,7 @@
 <title>仓鼠闯关大冒险</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#87CEEB;touch-action:manipulation;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;touch-action:manipulation;overscroll-behavior:none;user-select:none;-webkit-user-select:none}
 canvas{display:block;margin:0 auto}
 #ui{position:fixed;bottom:0;left:0;right:0;display:flex;justify-content:space-between;padding:12px 16px 20px;gap:8px;pointer-events:none}
 .btn-group{display:flex;gap:8px;pointer-events:auto}
@@ -15,12 +15,12 @@ canvas{display:block;margin:0 auto}
 .btn:active{background:rgba(255,255,255,.5);transform:scale(.92)}
 #overlay{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.7);z-index:10;justify-content:center;align-items:center;flex-direction:column}
 #overlay.active{display:flex}
-#overlay h2{color:#fff;font-size:36px;margin-bottom:12px}
-#overlay p{color:#ddd;font-size:18px;margin-bottom:20px}
-#overlay button{padding:14px 40px;font-size:20px;border-radius:30px;border:none;background:#FF8C00;color:#fff;font-weight:700;cursor:pointer}
+#overlay h2{color:#fff;font-size:42px;margin-bottom:16px}
+#overlay p{color:#ddd;font-size:22px;margin-bottom:28px;text-align:center;line-height:1.6;white-space:pre-line}
+#overlay button{padding:18px 56px;font-size:24px;border-radius:36px;border:none;background:#FF8C00;color:#fff;font-weight:700;cursor:pointer;-webkit-tap-highlight-color:transparent}
 #overlay button:active{background:#E07B00}
 #topbar{position:fixed;top:8px;left:12px;right:12px;display:flex;justify-content:space-between;pointer-events:none;z-index:5}
-#topbar span{background:rgba(0,0,0,.4);color:#fff;padding:4px 14px;border-radius:20px;font-size:14px;font-weight:600;backdrop-filter:blur(4px)}
+#topbar span{background:rgba(0,0,0,.4);color:#fff;padding:6px 16px;border-radius:20px;font-size:18px;font-weight:600;backdrop-filter:blur(4px)}
 </style>
 </head>
 <body>
@@ -62,10 +62,12 @@ const C=document.getElementById('c'),ctx=C.getContext('2d');
 const W=480,H=720;
 let cw,ch,scale;
 function resize(){
-  const maxW=Math.min(window.innerWidth,480),maxH=Math.min(window.innerHeight,800);
+  const maxW=Math.min(window.innerWidth,600),maxH=Math.min(window.innerHeight,1000);
   scale=Math.min(maxW/W,maxH/H);
   cw=W*scale;ch=H*scale;
   C.width=W;C.height=H;C.style.width=cw+'px';C.style.height=ch+'px';
+  // Center canvas on iPad
+  C.style.position='absolute';C.style.left='50%';C.style.top='50%';C.style.transform='translate(-50%,-50%)';
 }
 resize();window.addEventListener('resize',resize);
 
@@ -310,17 +312,21 @@ function render(){
 
   if(hamster.invincible<=0||Math.floor(hamster.invincible/4)%2===0){drawHamster(hamster.x-cameraX,hamster.y,hamster.w,hamster.h,hamster.face,hamster.walkFrame,gameState==='dead')}
 
-  // Touch zone hints
+  // Touch zone hints (large for iPad)
   if(gameState==='playing'){
-    const bh=72,by=H-bh;
-    ctx.fillStyle='rgba(0,0,0,0.15)';
+    const bh=90,by=H-bh;
+    ctx.fillStyle='rgba(0,0,0,0.18)';
     ctx.fillRect(0,by,W*0.35,bh);
     ctx.fillRect(W*0.65,by,W*0.35,bh);
-    ctx.fillStyle='rgba(255,255,255,0.5)';
-    ctx.font='bold 20px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
-    ctx.fillText('◀ 向左',W*0.175,by+bh/2);
-    ctx.fillText('向右 ▶',W*0.825,by+bh/2);
-    ctx.fillText('点中间跳跃',W/2,by+bh/2);
+    ctx.fillStyle='rgba(255,255,255,0.6)';
+    ctx.font='bold 22px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('◀ 向左走',W*0.175,by+bh/2-8);
+    ctx.fillText('向右走 ▶',W*0.825,by+bh/2-8);
+    ctx.font='18px sans-serif';
+    ctx.fillText('👆 点中间跳',W/2,by+bh/2-6);
+    ctx.font='14px sans-serif';ctx.fillStyle='rgba(255,255,255,0.4)';
+    ctx.fillText('按住不放连续走',W*0.175,by+bh/2+22);
+    ctx.fillText('按住不放连续走',W*0.825,by+bh/2+22);
   }
 
   if(gameState==='dead'){

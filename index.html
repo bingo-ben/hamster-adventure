@@ -78,7 +78,7 @@ resize();window.addEventListener('resize',resize);
 
 // =============== GAME STATE ===============
 const GRAVITY=0.4,MAX_DY=10,SPEED=3.5,JUMP_FORCE=-11,GROUND_Y=620;
-let hamster={x:60,y:0,dx:0,dy:0,w:38,h:42,onGround:false,face:1,walkFrame:0,invincible:0,lives:3};
+let hamster={x:60,y:0,dx:0,dy:0,w:48,h:38,onGround:false,face:1,walkFrame:0,invincible:0,lives:3};
 let cameraX=0,score=0,currentLevel=1;
 let gameState='title',keys={},btns={left:false,right:false};
 let platforms=[],obstacles=[],enemies=[],coins=[],coinsCollected=[];
@@ -197,6 +197,9 @@ function getGroundY(hx,hy,hw,hh){
   for(let p of platforms){
     if(hx+hw-6>p.x&&hx+6<p.x+p.w&&hy+hh>=p.y&&hy+hh<=p.y+16&&hamster.dy>=0)return p.y;
   }
+  for(let o of obstacles){
+    if(hx+hw-6>o.x&&hx+6<o.x+o.w&&hy+hh>=o.y&&hy+hh<=o.y+16&&hamster.dy>=0)return o.y;
+  }
   return null;
 }
 
@@ -204,12 +207,12 @@ function getGroundY(hx,hy,hw,hh){
 function drawHamster(x,y,w,h,face,walkFrame,dead){
   const cx=x+w/2,cy=y+h/2;
   ctx.save();ctx.translate(cx,cy);
-  if(dead){ctx.fillStyle='#F0E8E0';ctx.fillRect(-w/2,-2,w,10);ctx.fillStyle='#FFCCD5';ctx.fillRect(-3,-5,6,6);ctx.fillStyle='#000';ctx.fillRect(-2,-4,2,2);ctx.fillRect(1,-4,2,2);ctx.restore();return}
-  // Elongated body (长条形)
-  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.ellipse(0,h*0.08,w*0.46,h*0.35,0,0,Math.PI*2);ctx.fill();
+  if(dead){ctx.fillStyle='#F0E8E0';ctx.fillRect(-w/2+5,-2,w-10,10);ctx.fillStyle='#FFCCD5';ctx.fillRect(-3,-5,6,6);ctx.fillStyle='#000';ctx.fillRect(-2,-4,2,2);ctx.fillRect(1,-4,2,2);ctx.restore();return}
+  // Horizontally elongated body (横向长条形)
+  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.ellipse(0,h*0.1,w*0.5,h*0.3,0,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1.2;ctx.stroke();
   // White belly
-  ctx.fillStyle='#FFF';ctx.beginPath();ctx.ellipse(0,h*0.1,w*0.3,h*0.24,0,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFF';ctx.beginPath();ctx.ellipse(0,h*0.12,w*0.34,h*0.22,0,0,Math.PI*2);ctx.fill();
   // Head
   ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.arc(0,-h*0.18,w*0.32,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1.2;ctx.stroke();
@@ -306,8 +309,15 @@ function update(){
 
   if(h.onGround&&Math.abs(h.dx)>0.5){h.walkFrame+=0.25;if(Math.floor(h.walkFrame*2)%3===0&&Math.floor((h.walkFrame-0.25)*2)%3!==0)sfx('step')}else h.walkFrame*=0.8;
 
-  // Obstacles
-  for(let o of obstacles){if(rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},o)&&h.invincible<=0){if(h.dy>=0||h.y+h.h>=o.y+6){die();return}}}
+  // Obstacles — block movement, no damage
+  for(let o of obstacles){
+    if(rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},o)){
+      // Landed on top
+      if(h.dy>=0&&h.y+h.h-h.dy<=o.y+8){h.y=o.y-h.h;h.dy=0;h.onGround=true}
+      // Walk into side — push back
+      else if(h.dx!==0){h.x-=h.dx;h.dx=0}
+    }
+  }
 
   // Enemies
   for(let e of enemies){
@@ -375,7 +385,7 @@ function gameLoop(){update();render();document.getElementById('score').textConte
 function startGame(fromLevel=1){
   initAudio();
   currentLevel=fromLevel;loadLevel(fromLevel);
-  hamster.x=60;hamster.y=GROUND_Y-44;hamster.dx=0;hamster.dy=0;hamster.onGround=false;hamster.walkFrame=0;hamster.invincible=0;hamster.face=1;hamster.lives=10;
+  hamster.x=60;hamster.y=GROUND_Y-40;hamster.dx=0;hamster.dy=0;hamster.onGround=false;hamster.walkFrame=0;hamster.invincible=0;hamster.face=1;hamster.lives=10;
   cameraX=0;gameState='playing';
   document.getElementById('overlay').classList.remove('active');
 }

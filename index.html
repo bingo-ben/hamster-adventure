@@ -320,12 +320,20 @@ function update(){
     else{h.x-=h.dx;h.dx=0}
   }
 
-  // Enemies — stomp only, no other interaction
+  // Enemies — stomp to kill them, touch to die
   for(let e of enemies){
     if(e.dead)continue;
     e.x+=e.dir*0.6;if(e.x>e.startX+e.range){e.dir=-1}if(e.x<e.startX-e.range){e.dir=1}
     if(!rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},{x:e.x,y:e.y,w:e.w+4,h:e.h}))continue;
     if(h.dy>0&&h.y+h.h-h.dy<=e.y+8){e.dead=true;h.dy=-6;score+=80;sfx('stomp')}
+    else if(h.invincible<=0){die();return}
+  }
+
+  // Platforms — solid from below, can't jump through
+  for(let p of platforms){
+    if(h.x+h.w-4>p.x&&h.x+4<p.x+p.w&&h.dy<0&&h.y<=p.y+p.h&&h.y+h.h>=p.y+p.h&&h.y+h.h-h.dy>=p.y+p.h){
+      h.y=p.y+p.h;h.dy=0;
+    }
   }
 
   // Coins

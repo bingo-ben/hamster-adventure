@@ -324,14 +324,15 @@ function update(){
   for(let e of enemies){
     if(e.dead)continue;
     e.x+=e.dir*0.6;if(e.x>e.startX+e.range){e.dir=-1}if(e.x<e.startX-e.range){e.dir=1}
-    if(!rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},{x:e.x,y:e.y,w:e.w+4,h:e.h}))continue;
-    if(h.dy>0&&h.y+h.h-h.dy<=e.y+8){e.dead=true;h.dy=-6;score+=80;sfx('stomp')}
-    else if(h.invincible<=0){die();return}
+    if(!rectCollide({x:h.x-8,y:h.y-6,w:h.w+16,h:h.h+12},{x:e.x-8,y:e.y-6,w:e.w+16,h:e.h+12}))continue;
+    if(h.dy>0&&h.y+h.h-h.dy<=e.y+8){e.dead=true;h.dy=-6;score+=80;sfx('stomp');continue}
+    if(h.invincible<=0){die();return}
   }
 
   // Platforms — solid from below, can't jump through
   for(let p of platforms){
-    if(h.x+h.w-4>p.x&&h.x+4<p.x+p.w&&h.dy<0&&h.y<=p.y+p.h&&h.y+h.h>=p.y+p.h&&h.y+h.h-h.dy>=p.y+p.h){
+    const hcx=h.x+h.w/2;
+    if(hcx>p.x&&hcx<p.x+p.w&&h.dy<0&&h.y+h.h>=p.y+p.h&&h.y+h.h-h.dy>=p.y+p.h){
       h.y=p.y+p.h;h.dy=0;
     }
   }

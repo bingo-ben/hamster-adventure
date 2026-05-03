@@ -305,29 +305,27 @@ function update(){
 
   const gY=getGroundY(h.x,h.y,h.w,h.h);
   if(gY!==null){h.y=gY-h.h;h.dy=0;h.onGround=true}else{h.onGround=false}
-  if(h.y>H+50){die();return}
+  if(h.y>H+50){
+    if(h.invincible<=0)die();
+    else{h.y=GROUND_Y-h.h;h.dy=0;h.onGround=true}
+    return;
+  }
 
   if(h.onGround&&Math.abs(h.dx)>0.5){h.walkFrame+=0.25;if(Math.floor(h.walkFrame*2)%3===0&&Math.floor((h.walkFrame-0.25)*2)%3!==0)sfx('step')}else h.walkFrame*=0.8;
 
-  // Obstacles — block movement, no damage
+  // Obstacles — solid blocks, stand on them or get blocked
   for(let o of obstacles){
-    if(rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},o)){
-      // Landed on top
-      if(h.dy>=0&&h.y+h.h-h.dy<=o.y+8){h.y=o.y-h.h;h.dy=0;h.onGround=true}
-      // Walk into side — push back
-      else if(h.dx!==0){h.x-=h.dx;h.dx=0}
-    }
+    if(!rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},o))continue;
+    if(h.dy>=0&&h.y+h.h-h.dy<=o.y+6){h.y=o.y-h.h;h.dy=0;h.onGround=true}
+    else{h.x-=h.dx;h.dx=0}
   }
 
-  // Enemies — stomp to defeat, harmless otherwise
+  // Enemies — stomp only, no other interaction
   for(let e of enemies){
     if(e.dead)continue;
     e.x+=e.dir*0.6;if(e.x>e.startX+e.range){e.dir=-1}if(e.x<e.startX-e.range){e.dir=1}
-    if(!rectCollide({x:h.x-4,y:h.y,w:h.w+8,h:h.h},{x:e.x-4,y:e.y,w:e.w+8,h:e.h}))continue;
-    // Falling from above = stomp
-    if(h.dy>0&&h.y+h.h-h.dy<=e.y+12){e.dead=true;h.dy=-6;score+=80;sfx('stomp')}
-    // Walking into enemy = just push back
-    else if(h.dx!==0){h.x-=h.dx;h.dx=0}
+    if(!rectCollide({x:h.x,y:h.y,w:h.w,h:h.h},{x:e.x,y:e.y,w:e.w+4,h:e.h}))continue;
+    if(h.dy>0&&h.y+h.h-h.dy<=e.y+8){e.dead=true;h.dy=-6;score+=80;sfx('stomp')}
   }
 
   // Coins

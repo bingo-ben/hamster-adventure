@@ -78,7 +78,7 @@ resize();window.addEventListener('resize',resize);
 
 // =============== GAME STATE ===============
 const GRAVITY=0.4,MAX_DY=10,SPEED=3.5,JUMP_FORCE=-11,GROUND_Y=620;
-let hamster={x:60,y:0,dx:0,dy:0,w:48,h:38,onGround:false,face:1,walkFrame:0,invincible:0,lives:3};
+let hamster={x:60,y:0,dx:0,dy:0,w:44,h:42,onGround:false,face:1,walkFrame:0,invincible:0,lives:3};
 let cameraX=0,score=0,currentLevel=1;
 let gameState='title',keys={},btns={left:false,right:false};
 let platforms=[],obstacles=[],enemies=[],coins=[],coinsCollected=[];
@@ -207,55 +207,55 @@ function getGroundY(hx,hy,hw,hh){
 function drawHamster(x,y,w,h,face,walkFrame,dead){
   const cx=x+w/2,cy=y+h/2;
   ctx.save();ctx.translate(cx,cy);
-  if(dead){ctx.fillStyle='#F0E8E0';ctx.fillRect(-w/2+5,-2,w-10,10);ctx.fillStyle='#FFCCD5';ctx.fillRect(-3,-5,6,6);ctx.fillStyle='#000';ctx.fillRect(-2,-4,2,2);ctx.fillRect(1,-4,2,2);ctx.restore();return}
-  // Horizontally elongated body (横向长条形)
-  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.ellipse(0,h*0.1,w*0.5,h*0.3,0,0,Math.PI*2);ctx.fill();
+  if(dead){ctx.fillStyle='#F0E8E0';ctx.fillRect(-w/2,-2,w,10);ctx.fillStyle='#FFCCD5';ctx.fillRect(-3,-5,6,6);ctx.fillStyle='#000';ctx.fillRect(-2,-4,2,2);ctx.fillRect(1,-4,2,2);ctx.restore();return}
+  // Round chubby body
+  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.ellipse(0,h*0.08,w*0.46,h*0.4,0,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1.2;ctx.stroke();
   // White belly
-  ctx.fillStyle='#FFF';ctx.beginPath();ctx.ellipse(0,h*0.12,w*0.34,h*0.22,0,0,Math.PI*2);ctx.fill();
-  // Head
-  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.arc(0,-h*0.18,w*0.32,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFF';ctx.beginPath();ctx.ellipse(0,h*0.1,w*0.34,h*0.3,0,0,Math.PI*2);ctx.fill();
+  // Big round head
+  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.arc(0,-h*0.14,w*0.38,0,Math.PI*2);ctx.fill();
   ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1.2;ctx.stroke();
-  // Puffy cheeks
-  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.ellipse(-w*0.26,h*0.04,w*0.2,h*0.2,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(w*0.26,h*0.04,w*0.2,h*0.2,0,0,Math.PI*2);ctx.fill();
-  ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1;ctx.stroke();
-  ctx.beginPath();ctx.ellipse(w*0.26,h*0.04,w*0.2,h*0.2,0,0,Math.PI*2);ctx.stroke();
-  // Blush
-  ctx.fillStyle='#FFE0E0';ctx.beginPath();ctx.ellipse(-w*0.22,h*0.03,w*0.11,h*0.1,0,0,Math.PI*2);ctx.fill();
-  ctx.beginPath();ctx.ellipse(w*0.22,h*0.03,w*0.11,h*0.1,0,0,Math.PI*2);ctx.fill();
-  // Small round ears
-  ctx.fillStyle='#E8D5C4';ctx.beginPath();ctx.arc(-w*0.16,-h*0.32,6,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(w*0.16,-h*0.32,6,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#FFCCD5';ctx.beginPath();ctx.arc(-w*0.16,-h*0.32,3.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(w*0.16,-h*0.32,3.5,0,Math.PI*2);ctx.fill();
-  // Eyes
-  const eyeY=-h*0.2,eyeS=5;
-  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-6,eyeY,eyeS,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(6,eyeY,eyeS,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(-6+face*1.5,eyeY,2.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(6+face*1.5,eyeY,2.5,0,Math.PI*2);ctx.fill();
-  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-5+face*2,eyeY-2,1,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(7+face*2,eyeY-2,1,0,Math.PI*2);ctx.fill();
-  // Tiny nose
-  ctx.fillStyle='#FF9999';ctx.beginPath();ctx.moveTo(0,-h*0.08);ctx.lineTo(-2.5,-h*0.05);ctx.lineTo(2.5,-h*0.05);ctx.closePath();ctx.fill();
+  // Plump cheeks
+  ctx.fillStyle='#FFF8F0';ctx.beginPath();ctx.ellipse(-w*0.3,h*0.06,w*0.22,h*0.22,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(w*0.3,h*0.06,w*0.22,h*0.22,0,0,Math.PI*2);ctx.fill();
+  ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1;ctx.beginPath();ctx.ellipse(-w*0.3,h*0.06,w*0.22,h*0.22,0,0,Math.PI*2);ctx.stroke();
+  ctx.beginPath();ctx.ellipse(w*0.3,h*0.06,w*0.22,h*0.22,0,0,Math.PI*2);ctx.stroke();
+  // Pink blush
+  ctx.fillStyle='#FFE0E0';ctx.beginPath();ctx.ellipse(-w*0.24,h*0.04,w*0.13,h*0.11,0,0,Math.PI*2);ctx.fill();
+  ctx.beginPath();ctx.ellipse(w*0.24,h*0.04,w*0.13,h*0.11,0,0,Math.PI*2);ctx.fill();
+  // Tiny round ears
+  ctx.fillStyle='#E8D5C4';ctx.beginPath();ctx.arc(-w*0.18,-h*0.3,6,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(w*0.18,-h*0.3,6,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#FFCCD5';ctx.beginPath();ctx.arc(-w*0.18,-h*0.3,3.5,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(w*0.18,-h*0.3,3.5,0,Math.PI*2);ctx.fill();
+  // Big shiny eyes
+  const eyeY=-h*0.18,eyeS=6;
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-7,eyeY,eyeS,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(7,eyeY,eyeS,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#111';ctx.beginPath();ctx.arc(-7+face*1.5,eyeY,2.8,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(7+face*1.5,eyeY,2.8,0,Math.PI*2);ctx.fill();
+  ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(-6+face*2,eyeY-2.5,1.3,0,Math.PI*2);ctx.fill();ctx.beginPath();ctx.arc(8+face*2,eyeY-2.5,1.3,0,Math.PI*2);ctx.fill();
+  // Tiny pink nose
+  ctx.fillStyle='#FF9999';ctx.beginPath();ctx.moveTo(0,-h*0.06);ctx.lineTo(-2.5,-h*0.03);ctx.lineTo(2.5,-h*0.03);ctx.closePath();ctx.fill();
   // Mouth
   ctx.strokeStyle='#999';ctx.lineWidth=0.6;
-  ctx.beginPath();ctx.moveTo(-3,-h*0.04);ctx.quadraticCurveTo(0,-h*0.01,3,-h*0.04);ctx.stroke();
+  ctx.beginPath();ctx.moveTo(-3,-h*0.02);ctx.quadraticCurveTo(0,h*0.02,3,-h*0.02);ctx.stroke();
   // Short whiskers
   ctx.strokeStyle='#BBB';ctx.lineWidth=0.6;
   [[-1,0],[0,1],[1,0]].forEach(([dy,adj])=>{
-    ctx.beginPath();ctx.moveTo(-w*0.15+dy*2,h*0.0+adj*2);ctx.lineTo(-w*0.21+dy*6,-h*0.02+adj*4);ctx.stroke();
-    ctx.beginPath();ctx.moveTo(w*0.15+dy*2,h*0.0+adj*2);ctx.lineTo(w*0.21+dy*6,-h*0.02+adj*4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(-w*0.17+dy*2,h*0.02+adj*2);ctx.lineTo(-w*0.23+dy*6,h*0.0+adj*4);ctx.stroke();
+    ctx.beginPath();ctx.moveTo(w*0.17+dy*2,h*0.02+adj*2);ctx.lineTo(w*0.23+dy*6,h*0.0+adj*4);ctx.stroke();
   });
-  // Short legs
-  const wobble=walkFrame*0.5,legY=h*0.37;
+  // Short chubby legs
+  const wobble=walkFrame*0.5,legY=h*0.38;
   ctx.fillStyle='#FFF8F0';ctx.strokeStyle='#E8D5C4';ctx.lineWidth=1;
   ctx.save();ctx.translate(-w*0.1,legY);ctx.rotate(Math.sin(wobble)*0.3);
-  ctx.beginPath();ctx.ellipse(0,3,4,6,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#FFCCD5';ctx.beginPath();ctx.ellipse(0,6,2.5,2,0,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.beginPath();ctx.ellipse(0,3,5,7,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#FFCCD5';ctx.beginPath();ctx.ellipse(0,7,3,2.5,0,0,Math.PI*2);ctx.fill();ctx.restore();
   ctx.fillStyle='#FFF8F0';
   ctx.save();ctx.translate(w*0.1,legY);ctx.rotate(Math.sin(wobble+Math.PI)*0.3);
-  ctx.beginPath();ctx.ellipse(0,3,4,6,0,0,Math.PI*2);ctx.fill();ctx.stroke();
-  ctx.fillStyle='#FFCCD5';ctx.beginPath();ctx.ellipse(0,6,2.5,2,0,0,Math.PI*2);ctx.fill();ctx.restore();
+  ctx.beginPath();ctx.ellipse(0,3,5,7,0,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.fillStyle='#FFCCD5';ctx.beginPath();ctx.ellipse(0,7,3,2.5,0,0,Math.PI*2);ctx.fill();ctx.restore();
   // Tiny tail
   ctx.fillStyle='#FFF8F0';ctx.strokeStyle='#E8D5C4';ctx.lineWidth=0.7;
-  ctx.beginPath();ctx.ellipse(-w*0.4,h*0.12,4,3,-0.3,0,Math.PI*2);ctx.fill();ctx.stroke();
+  ctx.beginPath();ctx.ellipse(-w*0.42,h*0.14,5,3.5,-0.3,0,Math.PI*2);ctx.fill();ctx.stroke();
   ctx.restore();
 }
 
@@ -319,14 +319,14 @@ function update(){
     }
   }
 
-  // Enemies
+  // Enemies — stomp to defeat, no damage on contact
   for(let e of enemies){
     if(e.dead)continue;
     e.x+=e.dir*0.6;if(e.x>e.startX+e.range){e.dir=-1}if(e.x<e.startX-e.range){e.dir=1}
-    if(h.dy>0&&rectCollide({x:h.x-8,y:h.y,w:h.w+16,h:h.h},{x:e.x-8,y:e.y,w:e.w+16,h:e.h})){
+    if(rectCollide({x:h.x-8,y:h.y,w:h.w+16,h:h.h},{x:e.x-8,y:e.y,w:e.w+16,h:e.h})){
       const hamBottom=h.y+h.h,hamNextBottom=h.y+h.h-h.dy,enTop=e.y;
-      if(hamBottom>=enTop&&hamNextBottom<=enTop+18){e.dead=true;h.dy=-6;score+=80;sfx('stomp')}
-      else if(h.invincible<=0){die();return}
+      if(h.dy>0&&hamBottom>=enTop&&hamNextBottom<=enTop+18){e.dead=true;h.dy=-6;score+=80;sfx('stomp')}
+      else if(h.dy<0&&h.y<e.y+e.h){h.dy=0;h.y=e.y+e.h}
     }
   }
 
@@ -385,7 +385,7 @@ function gameLoop(){update();render();document.getElementById('score').textConte
 function startGame(fromLevel=1){
   initAudio();
   currentLevel=fromLevel;loadLevel(fromLevel);
-  hamster.x=60;hamster.y=GROUND_Y-40;hamster.dx=0;hamster.dy=0;hamster.onGround=false;hamster.walkFrame=0;hamster.invincible=0;hamster.face=1;hamster.lives=10;
+  hamster.x=60;hamster.y=GROUND_Y-44;hamster.dx=0;hamster.dy=0;hamster.onGround=false;hamster.walkFrame=0;hamster.invincible=0;hamster.face=1;hamster.lives=10;
   cameraX=0;gameState='playing';
   document.getElementById('overlay').classList.remove('active');
 }
